@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ns Games - Earn Points Playing Games</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Global Resets & Base Styles --- */
+        :root {
+            --header-bg-color: #E084B6; /* New Header Background Color */
+            --body-bg-color: #F79AA3;   /* Existing Body Background Color */
+            
+            /* Pink Accents */
+            --pink-accent-logo: #D81B60; /* Logo color IF header was white. Now for other accents. */
+            --pink-accent-headings: #D81B60; /* For H1, H2 on light backgrounds */
+            --pink-subtle-accent: #F06292;
+            --pink-primary-bg-cards: #FFF0F5; /* For cards/light elements on the body background */
+            
+            --blue-accent: #1976D2;
+            --blue-hover: #1565C0;
+            --text-dark: #333333;
+            --text-light: #FFFFFF; /* White text, to be used on dark backgrounds like the new header */
+            --grey-light: #fdf6f7;
+            --grey-medium: #f3e1e3;
+            --border-radius: 8px;
+            --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.12);
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--body-bg-color);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        h1, h2 {
+            color: var(--pink-accent-headings);
+            margin-bottom: 0.75em;
+        }
+        h3 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 0.75em;
+        }
+
+        h1 { font-size: 2.8rem; font-weight: 700; }
+        h2 { font-size: 2rem; font-weight: 600; }
+
+        a {
+            text-decoration: none;
+            color: var(--blue-accent);
+        }
+        a:hover {
+            color: var(--blue-hover);
+        }
+
+        /* --- Header --- */
+        .site-header {
+            background-color: var(--header-bg-color); /* Applied new header background */
+            padding: 0.8rem 0;
+            box-shadow: var(--shadow-soft);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .site-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { /* Header Logo */
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-light); /* Logo color is now white for contrast on header */
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .main-nav a {
+            color: var(--text-light); /* Navigation links color now white */
+            padding: 0.5em 0.8em;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease, opacity 0.3s ease;
+            margin: 0 0.2em;
+            font-size: 0.95rem;
+        }
+        .main-nav a:not(.nav-cta-button):hover {
+            opacity: 0.8; /* Subtle hover effect for white text */
+        }
+
+        .nav-cta-button { /* Signup button in nav */
+            background-color: var(--text-light); /* Button bg is white */
+            color: var(--header-bg-color) !important; /* Text color is header bg pink */
+            padding: 0.5em 1.2em;
+            border-radius: var(--border-radius);
+            font-weight: 600; /* Make CTA text slightly bolder */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-left: 0.8em;
+        }
+        .nav-cta-button:hover {
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            color: var(--header-bg-color) !important;
+        }
+
+        .mobile-nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light); /* Hamburger icon color is white */
+            cursor: pointer;
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            background-color: var(--text-light); /* Hero section white for content focus */
+            padding: 4rem 0;
+            text-align: center;
+            border-bottom: 1px solid var(--grey-medium);
+        }
+
+        .hero-content h1 { /* Site name in Hero */
+             color: var(--pink-accent-headings);
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .hero-cta { /* Game Tools button */
+            display: inline-block;
+            background-color: var(--blue-accent);
+            color: var(--text-light);
+            padding: 0.8em 2em;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: var(--shadow-soft);
+        }
+        .hero-cta:hover {
+            background-color: var(--blue-hover);
+            color: var(--text-light);
+            transform: translateY(-2px);
+        }
+
+        /* --- Search Section --- */
+        .search-section {
+            padding: 2rem 0;
+            background-color: var(--grey-light);
+        }
+        .search-bar-wrapper {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        #toolSearch {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 1px solid var(--grey-medium);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: var(--text-light);
+        }
+        #toolSearch:focus {
+            outline: none;
+            border-color: var(--blue-accent);
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+        }
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--grey-medium);
+        }
+
+        /* --- Tool Category Section --- */
+        .tool-category-section {
+            padding: 3rem 0;
+        }
+        .tool-category-section h2 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: var(--pink-accent-headings);
+        }
+        .tool-category-section h2 .section-icon {
+            margin-right: 0.5rem;
+            color: var(--pink-accent-headings);
+        }
+        .section-subheading {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .tool-card {
+            background-color: var(--pink-primary-bg-cards);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--grey-medium);
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+        .tool-card-icon {
+            font-size: 1.8rem;
+            color: var(--pink-accent-headings);
+            margin-bottom: 1rem;
+            width: 50px;
+            height: 50px;
+            background-color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: flex-start;
+        }
+        .tool-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+            color: var(--text-dark);
+        }
+        .tool-card p {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        .btn-use-tool {
+            display: inline-block;
+            background-color: var(--blue-accent);
+            color: var(--text-light);
+            padding: 0.6em 1.2em;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            align-self: flex-start;
+        }
+        .btn-use-tool:hover {
+            background-color: var(--blue-hover);
+            color: var(--text-light);
+        }
+
+        /* --- Footer --- */
+        .site-footer-bottom {
+            background-color: var(--text-dark);
+            color: var(--grey-light);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .site-footer-bottom .logo { /* Footer Logo */
+            color: var(--pink-subtle-accent); /* Use subtle pink for footer logo */
+        }
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .footer-logo-tagline p {
+            font-size: 0.9rem;
+            color: var(--grey-medium);
+        }
+        .footer-contact a {
+            color: var(--pink-subtle-accent);
+        }
+        .footer-contact a:hover {
+            color: var(--text-light);
+        }
+        .footer-links a {
+            color: var(--grey-medium);
+            margin: 0 0.5rem;
+        }
+        .footer-links a:hover {
+            color: var(--text-light);
+        }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.8rem; }
+
+            .main-nav {
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--header-bg-color); /* Mobile nav dropdown matches header */
+                box-shadow: var(--shadow-soft);
+                padding: 1rem;
+                border-top: 1px solid rgba(255,255,255,0.2); /* Light separator */
+            }
+            .main-nav.active {
+                display: flex;
+            }
+            .main-nav a {
+                padding: 0.8em 0;
+                margin: 0.3em 0;
+                width: 100%;
+                text-align: left;
+                color: var(--text-light); /* Mobile nav links also white */
+            }
+             .main-nav a:not(.nav-cta-button):hover {
+                opacity: 0.8;
+            }
+
+            .main-nav .nav-cta-button { /* Mobile CTA button */
+                display: block;
+                text-align: center;
+                margin-left: 0;
+                margin-top: 0.8rem; /* More space in mobile dropdown */
+                width: 100%; /* Full width button in mobile nav */
+                padding: 0.8em 1.2em;
+                background-color: var(--text-light);
+                color: var(--header-bg-color) !important;
+            }
+            .main-nav .nav-cta-button:hover {
+                 background-color: rgba(255, 255, 255, 0.9);
+            }
+
+
+            .mobile-nav-toggle {
+                display: block;
+            }
+
+            .hero-section {
+                padding: 3rem 0;
+            }
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                gap: 1.5rem;
+            }
+        }
+
+        /* Utility class for hidden items (used by JS for search) */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container">
+            <div class="logo">Ns Games</div>
+            <nav class="main-nav">
+                <a href="#">Home</a>
+                <a href="#game-tools-section">Games</a>
+                <a href="mailto:nooraalsifat@gmail.com">Contact</a>
+                <a href="#login">Login</a>
+                <a href="#signup" class="nav-cta-button">Signup</a>
+            </nav>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Ns Games</h1>
+                    <p class="subtitle">You earn extra points by playing daily games and watching ads - fast and free.</p>
+                    <a href="#game-tools-section" class="cta-button hero-cta">Game Tools</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="search-section">
+            <div class="container">
+                <div class="search-bar-wrapper">
+                    <input type="search" id="toolSearch" placeholder="Search a tool…" aria-label="Search tools">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+        </section>
+
+        <section id="game-tools-section" class="tool-category-section">
+            <div class="container">
+                <h2><i class="fas fa-gamepad section-icon"></i> Game Tools</h2>
+                <p class="section-subheading">Explore our collection of fun and engaging games to earn points.</p>
+                <div class="tool-grid">
+                    <!-- Tool Card 1 -->
+                    <div class="tool-card" data-tool-name="Game 1 amazing adventure">
+                        <div class="tool-card-icon"><i class="fas fa-dice-d6"></i></div>
+                        <h3>Game 1</h3>
+                        <p>An exciting adventure game to test your skills.</p>
+                        <a href="#placeholder-link" class="btn-use-tool">Use Tool</a>
+                    </div>
+                    <!-- Tool Card 2 -->
+                    <div class="tool-card" data-tool-name="Game 2 puzzle master">
+                        <div class="tool-card-icon"><i class="fas fa-puzzle-piece"></i></div>
+                        <h3>Game 2</h3>
+                        <p>Challenge your mind with intricate puzzles.</p>
+                        <a href="#placeholder-link" class="btn-use-tool">Use Tool</a>
+                    </div>
+                    <!-- Tool Card 3 -->
+                    <div class="tool-card" data-tool-name="Game 3 speed run">
+                        <div class="tool-card-icon"><i class="fas fa-stopwatch"></i></div>
+                        <h3>Game 3</h3>
+                        <p>Test your reflexes in this fast-paced game.</p>
+                        <a href="#placeholder-link" class="btn-use-tool">Use Tool</a>
+                    </div>
+                    <!-- Tool Card 4 -->
+                    <div class="tool-card" data-tool-name="Game 4 strategy king">
+                        <div class="tool-card-icon"><i class="fas fa-chess-knight"></i></div>
+                        <h3>Game 4</h3>
+                        <p>Outsmart opponents in this strategy challenge.</p>
+                        <a href="#placeholder-link" class="btn-use-tool">Use Tool</a>
+                    </div>
+                    <!-- Tool Card 5 -->
+                    <div class="tool-card" data-tool-name="Game 5 word wizard">
+                        <div class="tool-card-icon"><i class="fas fa-spell-check"></i></div>
+                        <h3>Game 5</h3>
+                        <p>Expand your vocabulary with this word game.</p>
+                        <a href="#placeholder-link" class="btn-use-tool">Use Tool</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <footer class="site-footer-bottom">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo-tagline">
+                    <div class="logo">Ns Games</div>
+                    <p>Earn money by playing games.</p>
+                </div>
+                <div class="footer-contact">
+                    <p><a href="mailto:nooraalsifat@gmail.com">nooraalsifat@gmail.com</a></p>
+                </div>
+                <div class="footer-links">
+                    <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile navigation toggle
+            const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+            const mainNav = document.querySelector('.main-nav');
+
+            if (mobileNavToggle && mainNav) {
+                mobileNavToggle.addEventListener('click', function () {
+                    mainNav.classList.toggle('active');
+                    const icon = mobileNavToggle.querySelector('i');
+                    if (mainNav.classList.contains('active')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+            
+            const navLinks = mainNav.querySelectorAll('a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 768 && mainNav.classList.contains('active')) {
+                        mainNav.classList.remove('active');
+                        mobileNavToggle.querySelector('i').classList.remove('fa-times');
+                        mobileNavToggle.querySelector('i').classList.add('fa-bars');
+                    }
+                });
+            });
+
+            // Live search/filter for tools
+            const searchInput = document.getElementById('toolSearch');
+            const toolCards = document.querySelectorAll('.tool-card');
+
+            if (searchInput && toolCards.length > 0) {
+                searchInput.addEventListener('input', function () {
+                    const searchTerm = searchInput.value.toLowerCase().trim();
+
+                    toolCards.forEach(card => {
+                        const toolName = card.dataset.toolName ? card.dataset.toolName.toLowerCase() : '';
+                        const toolTitle = card.querySelector('h3').textContent.toLowerCase();
+                        const toolDescription = card.querySelector('p').textContent.toLowerCase();
+
+                        if (toolName.includes(searchTerm) || toolTitle.includes(searchTerm) || toolDescription.includes(searchTerm)) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
