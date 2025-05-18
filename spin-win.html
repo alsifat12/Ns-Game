@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin & Win - Improved Text</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 450px;
+        }
+
+        h1 {
+            color: #1a202c;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 30px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #4A5568;
+            position: relative;
+            overflow: hidden;
+            transition: transform 6s cubic-bezier(0.25, 0.1, 0.25, 1);
+            background-color: #E2E8F0;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.15);
+        }
+
+        .segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: 100% 100%;
+            display: flex; /* For centering the span */
+            justify-content: center; /* For centering the span */
+            align-items: center; /* For centering the span */
+            font-size: 12px; /* Adjusted font size for segment text */
+            font-weight: 600;
+            color: #ffffff;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
+            box-sizing: border-box;
+            padding-right: 35px; /* Increased: Pushes content (span) further from segment tip (inwards) */
+        }
+
+        .segment span {
+            display: inline-block; /* So transform works */
+            transform-origin: center; /* Important for rotation */
+            max-width: 75%; /* Adjusted for more breathing room */
+            word-wrap: break-word;
+            line-height: 1.2; /* Helps if text wraps */
+            text-align: center; /* Ensures text within span is centered */
+            /* position: relative; // Not needed if not using top/left */
+        }
+
+        .pointer {
+            width: 0;
+            height: 0;
+            border-left: 22px solid transparent;
+            border-right: 22px solid transparent;
+            border-top: 35px solid #E53E3E;
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.3));
+        }
+        .pointer::before {
+            content: '';
+            position: absolute;
+            top: -34px;
+            left: -18px;
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 28px solid #c53030;
+            z-index: -1;
+        }
+
+        #spinButton {
+            padding: 15px 35px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            letter-spacing: 0.5px;
+        }
+
+        #spinButton:hover:not(:disabled) {
+            background: linear-gradient(135deg, #5a6fcf 0%, #673f8b 100%);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        #spinButton:active:not(:disabled) {
+            transform: translateY(0px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        #spinButton:disabled {
+            background: #CBD5E0;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2D3748;
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Spin & Win!</h1>
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <div class="wheel" id="wheel">
+                <!-- Segments will be generated by JavaScript -->
+            </div>
+        </div>
+        <button id="spinButton">SPIN!</button>
+        <p id="result">Test Your Luck!</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wheel = document.getElementById('wheel');
+            const spinButton = document.getElementById('spinButton');
+            const resultDisplay = document.getElementById('result');
+
+            const prizes = [
+                { text: "$10 Bonus", color: "#6C5CE7", textColor: "#FFFFFF" },
+                { text: "50 Points", color: "#48BB78", textColor: "#FFFFFF" },
+                { text: "Try Again", color: "#A0AEC0", textColor: "#1A202C" },
+                { text: "$5 Credit", color: "#F6AD55", textColor: "#1A202C" },
+                { text: "2x Multiplier", color: "#ED64A6", textColor: "#FFFFFF" }, // Longer text
+                { text: "Spin Again", color: "#718096", textColor: "#FFFFFF" },   // Moderate length
+                { text: "$100 EPIC WIN!", color: "#ECC94B", textColor: "#1A202C" },// Longer text
+                { text: "25 Points", color: "#4FD1C5", textColor: "#1A202C" }
+            ];
+
+            const numSegments = prizes.length;
+            const segmentAngle = 360 / numSegments;
+            let currentRotation = 0;
+            let isSpinning = false;
+
+            prizes.forEach((prize, index) => {
+                const segment = document.createElement('div');
+                segment.classList.add('segment');
+                segment.style.backgroundColor = prize.color;
+                
+                const segmentRotation = segmentAngle * index;
+                const skewAngle = 90 - segmentAngle;
+                segment.style.transform = `rotate(${segmentRotation}deg) skewY(${skewAngle}deg)`;
+
+                const textSpan = document.createElement('span');
+                textSpan.textContent = prize.text;
+                if (prize.textColor) {
+                    textSpan.style.color = prize.textColor;
+                }
+
+                const textRotation = (segmentAngle / 2) - 90;
+                const skewCorrection = `skewY(-${skewAngle}deg)`;
+                
+                // Fine-tune radial position with translateY.
+                // Negative values move text "up" (inwards along its rotated axis).
+                // Positive values move text "down" (outwards along its rotated axis).
+                let radialTranslateY = 0; // Default: centered by flexbox in segment's padded area.
+
+                if (numSegments >= 8 && prize.text.length > 10) { // If many segments AND long text
+                    radialTranslateY = -4; // Pull it inwards more
+                } else if (prize.text.length > 12) { // For generally long text
+                    radialTranslateY = -2; // Pull it slightly inwards
+                } else if (prize.text.length < 6 && numSegments < 8) { // Short text, wider segments
+                    radialTranslateY = 2; // Push it slightly outwards if too far in
+                }
+                
+                textSpan.style.transform = `${skewCorrection} rotate(${textRotation}deg) translateY(${radialTranslateY}px)`;
+                
+                segment.appendChild(textSpan);
+                wheel.appendChild(segment);
+            });
+
+            spinButton.addEventListener('click', () => {
+                if (isSpinning) return;
+
+                isSpinning = true;
+                spinButton.disabled = true;
+                resultDisplay.textContent = "Spinning...";
+                resultDisplay.style.color = "#2D3748";
+
+                const randomIndex = Math.floor(Math.random() * numSegments);
+                const winningPrize = prizes[randomIndex];
+                
+                const minRevolutions = 5 + Math.floor(Math.random() * 3);
+                const targetMiddleAngle = (randomIndex + 0.5) * segmentAngle;
+                const normalizedCurrentRotation = currentRotation % 360;
+                let finalRotationAmount = (minRevolutions * 360) - targetMiddleAngle - normalizedCurrentRotation;
+
+                if (finalRotationAmount < 360) {
+                    finalRotationAmount += (2 * 360);
+                }
+                
+                currentRotation += finalRotationAmount;
+                wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+                setTimeout(() => {
+                    resultDisplay.textContent = `You won: ${winningPrize.text}!`;
+                    if (winningPrize.text.toLowerCase().includes("win") || winningPrize.text.toLowerCase().includes("$")) {
+                        resultDisplay.style.color = "#2F855A";
+                    } else if (winningPrize.text.toLowerCase().includes("try again")) {
+                        resultDisplay.style.color = "#C53030";
+                    } else {
+                        resultDisplay.style.color = "#2D3748";
+                    }
+                    
+                    isSpinning = false;
+                    spinButton.disabled = false;
+                }, 6000);
+            });
+        });
+    </script>
+</body>
+</html>
