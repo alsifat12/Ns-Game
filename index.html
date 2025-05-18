@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ns Games - Earn Points Playing Games</title>
+    <title>Ns Games - Earn Points Playing Games & Watching Ads</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -155,7 +155,7 @@
             margin: 0 auto 2rem auto;
         }
 
-        .hero-cta { /* Game Tools button */
+        .hero-cta { /* Main CTA button in Hero */
             display: inline-block;
             background-color: var(--blue-accent);
             color: var(--text-light);
@@ -204,7 +204,7 @@
             color: var(--grey-medium);
         }
 
-        /* --- Tool Category Section --- */
+        /* --- Tool Category Section (Generic for Games & Ads) --- */
         .tool-category-section {
             padding: 3rem 0;
         }
@@ -266,7 +266,7 @@
             margin-bottom: 1.5rem;
             flex-grow: 1;
         }
-        .btn-use-tool {
+        .btn-use-tool { /* Can be used for "Play Game", "Watch Ad", etc. */
             display: inline-block;
             background-color: var(--blue-accent);
             color: var(--text-light);
@@ -393,6 +393,7 @@
             <nav class="main-nav">
                 <a href="#">Home</a>
                 <a href="#game-tools-section">Games</a>
+                <a href="#ads-tools-section">Ads</a>
                 <a href="mailto:nooraalsifat@gmail.com">Contact</a>
                 <a href="#login">Login</a>
                 <a href="#signup" class="nav-cta-button">Signup</a>
@@ -409,7 +410,7 @@
                 <div class="hero-content">
                     <h1>Ns Games</h1>
                     <p class="subtitle">You earn extra points by playing daily games and watching ads - fast and free.</p>
-                    <a href="#game-tools-section" class="cta-button hero-cta">Game Tools</a>
+                    <a href="#game-tools-section" class="cta-button hero-cta">Explore Tools</a>
                 </div>
             </div>
         </section>
@@ -417,7 +418,7 @@
         <section class="search-section">
             <div class="container">
                 <div class="search-bar-wrapper">
-                    <input type="search" id="toolSearch" placeholder="Search a tool…" aria-label="Search tools">
+                    <input type="search" id="toolSearch" placeholder="Search games or ads…" aria-label="Search games or ads">
                     <i class="fas fa-search search-icon"></i>
                 </div>
             </div>
@@ -428,40 +429,91 @@
                 <h2><i class="fas fa-gamepad section-icon"></i> Game Tools</h2>
                 <p class="section-subheading">Explore our collection of fun and engaging games to earn points.</p>
                 <div class="tool-grid">
-                    <!-- Tool Card 1 -->
+                    <!-- Game Card 1 -->
                     <div class="tool-card" data-tool-name="Game 1 amazing adventure">
                         <div class="tool-card-icon"><i class="fas fa-dice-d6"></i></div>
                         <h3>Game 1</h3>
                         <p>An exciting adventure game to test your skills.</p>
-                        <a href="#placeholder-link" class="btn-use-tool">Use Tool</a>
+                        <a href="#placeholder-link" class="btn-use-tool">Play Game</a>
                     </div>
-                    <!-- Tool Card 2 -->
+                    <!-- Game Card 2 -->
                     <div class="tool-card" data-tool-name="Game 2 puzzle master">
                         <div class="tool-card-icon"><i class="fas fa-puzzle-piece"></i></div>
                         <h3>Game 2</h3>
                         <p>Challenge your mind with intricate puzzles.</p>
-                        <a href="#placeholder-link" class="btn-use-tool">Use Tool</a>
+                        <a href="#placeholder-link" class="btn-use-tool">Play Game</a>
                     </div>
-                    <!-- Tool Card 3 -->
+                    <!-- Game Card 3 -->
                     <div class="tool-card" data-tool-name="Game 3 speed run">
                         <div class="tool-card-icon"><i class="fas fa-stopwatch"></i></div>
                         <h3>Game 3</h3>
                         <p>Test your reflexes in this fast-paced game.</p>
-                        <a href="#placeholder-link" class="btn-use-tool">Use Tool</a>
+                        <a href="#placeholder-link" class="btn-use-tool">Play Game</a>
                     </div>
-                    <!-- Tool Card 4 -->
+                    <!-- Game Card 4 -->
                     <div class="tool-card" data-tool-name="Game 4 strategy king">
                         <div class="tool-card-icon"><i class="fas fa-chess-knight"></i></div>
                         <h3>Game 4</h3>
                         <p>Outsmart opponents in this strategy challenge.</p>
-                        <a href="#placeholder-link" class="btn-use-tool">Use Tool</a>
+                        <a href="#placeholder-link" class="btn-use-tool">Play Game</a>
                     </div>
-                    <!-- Tool Card 5 -->
+                    <!-- Game Card 5 -->
                     <div class="tool-card" data-tool-name="Game 5 word wizard">
                         <div class="tool-card-icon"><i class="fas fa-spell-check"></i></div>
                         <h3>Game 5</h3>
                         <p>Expand your vocabulary with this word game.</p>
-                        <a href="#placeholder-link" class="btn-use-tool">Use Tool</a>
+                        <a href="#placeholder-link" class="btn-use-tool">Play Game</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ads-tools-section" class="tool-category-section">
+            <div class="container">
+                <h2><i class="fas fa-bullhorn section-icon"></i> Ads Tools</h2>
+                <p class="section-subheading">Watch ads to boost your point earnings.</p>
+                <div class="tool-grid">
+                    <!-- Ad Card 1 -->
+                    <div class="tool-card" data-tool-name="Ad 1 watch and earn">
+                        <div class="tool-card-icon"><i class="fas fa-eye"></i></div>
+                        <h3>Ad 1</h3>
+                        <p>Watch this short ad to earn bonus points.</p>
+                        <a href="#placeholder-ad-link-1" class="btn-use-tool">Watch Ad</a>
+                    </div>
+                    <!-- Ad Card 2 -->
+                    <div class="tool-card" data-tool-name="Ad 2 quick points">
+                        <div class="tool-card-icon"><i class="fas fa-eye"></i></div>
+                        <h3>Ad 2</h3>
+                        <p>A quick ad for some easy points.</p>
+                        <a href="#placeholder-ad-link-2" class="btn-use-tool">Watch Ad</a>
+                    </div>
+                    <!-- Ad Card 3 -->
+                    <div class="tool-card" data-tool-name="Ad 3 daily bonus">
+                        <div class="tool-card-icon"><i class="fas fa-eye"></i></div>
+                        <h3>Ad 3</h3>
+                        <p>Get your daily ad bonus here.</p>
+                        <a href="#placeholder-ad-link-3" class="btn-use-tool">Watch Ad</a>
+                    </div>
+                    <!-- Ad Card 4 -->
+                    <div class="tool-card" data-tool-name="Ad 4 extra reward">
+                        <div class="tool-card-icon"><i class="fas fa-eye"></i></div>
+                        <h3>Ad 4</h3>
+                        <p>Unlock an extra reward by watching this ad.</p>
+                        <a href="#placeholder-ad-link-4" class="btn-use-tool">Watch Ad</a>
+                    </div>
+                     <!-- Ad Card 5 -->
+                     <div class="tool-card" data-tool-name="Ad 5 point booster">
+                        <div class="tool-card-icon"><i class="fas fa-eye"></i></div>
+                        <h3>Ad 5</h3>
+                        <p>Boost your points significantly with this ad.</p>
+                        <a href="#placeholder-ad-link-5" class="btn-use-tool">Watch Ad</a>
+                    </div>
+                    <!-- Ad Card 6 -->
+                    <div class="tool-card" data-tool-name="Ad 6 special offer">
+                        <div class="tool-card-icon"><i class="fas fa-eye"></i></div>
+                        <h3>Ad 6</h3>
+                        <p>Check out a special offer by watching.</p>
+                        <a href="#placeholder-ad-link-6" class="btn-use-tool">Watch Ad</a>
                     </div>
                 </div>
             </div>
@@ -474,7 +526,7 @@
             <div class="footer-content">
                 <div class="footer-logo-tagline">
                     <div class="logo">Ns Games</div>
-                    <p>Earn money by playing games.</p>
+                    <p>Earn money by playing games and watching ads.</p>
                 </div>
                 <div class="footer-contact">
                     <p><a href="mailto:nooraalsifat@gmail.com">nooraalsifat@gmail.com</a></p>
@@ -499,27 +551,32 @@
                     if (mainNav.classList.contains('active')) {
                         icon.classList.remove('fa-bars');
                         icon.classList.add('fa-times');
+                        mobileNavToggle.setAttribute('aria-expanded', 'true');
                     } else {
                         icon.classList.remove('fa-times');
                         icon.classList.add('fa-bars');
+                        mobileNavToggle.setAttribute('aria-expanded', 'false');
                     }
                 });
             }
             
+            // Close mobile nav when a link is clicked
             const navLinks = mainNav.querySelectorAll('a');
             navLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     if (window.innerWidth <= 768 && mainNav.classList.contains('active')) {
                         mainNav.classList.remove('active');
-                        mobileNavToggle.querySelector('i').classList.remove('fa-times');
-                        mobileNavToggle.querySelector('i').classList.add('fa-bars');
+                        const icon = mobileNavToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                        mobileNavToggle.setAttribute('aria-expanded', 'false');
                     }
                 });
             });
 
-            // Live search/filter for tools
+            // Live search/filter for tools (games and ads)
             const searchInput = document.getElementById('toolSearch');
-            const toolCards = document.querySelectorAll('.tool-card');
+            const toolCards = document.querySelectorAll('.tool-card'); // Selects all cards, games and ads
 
             if (searchInput && toolCards.length > 0) {
                 searchInput.addEventListener('input', function () {
