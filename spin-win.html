@@ -3,59 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spin & Win - Improved Text</title>
+    <title>Pro Spin & Win App</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@500&display=swap');
 
         body {
-            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column; /* To stack header and game */
+            justify-content: flex-start; /* Align items to the top */
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1a233a; /* Dark blue background from image */
+            margin: 0;
+            padding-top: 20px; /* Space for header */
+            color: #ffffff;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        .app-header {
+            width: 90%;
+            max-width: 500px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1em;
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        .header-info .icon {
+            margin-right: 8px;
+            font-size: 1.3em;
+        }
+        /* Simple placeholder icons - replace with actual image icons if desired */
+        .icon-spin::before { content: "🎡"; } /* Or 🔄 */
+        .icon-coin::before { content: "💰"; } /* Or 🪙 */
+
+
+        .game-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .wheel-assembly {
+            position: relative;
+            width: 360px; /* Slightly smaller to fit better with header */
+            height: 360px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background-color: #f0f2f5;
-            margin: 0;
-            overflow: hidden;
-            color: #333;
+            z-index: 2;
         }
 
-        .container {
-            text-align: center;
-            background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 450px;
+        .outer-ring {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff4b2b 60%, #ff416c 100%);
+            position: absolute;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        h1 {
-            color: #1a202c;
-            margin-bottom: 25px;
-            font-size: 2.2em;
-            font-weight: 700;
+        .outer-ring::before { /* Pointer */
+            content: '';
+            position: absolute;
+            top: -10px; /* Adjust based on new wheel size */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent; /* Pointer size adjust */
+            border-right: 18px solid transparent;
+            border-top: 28px solid #E53E3E;
+            filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.4));
+            z-index: 7;
+        }
+
+        .light {
+            width: 14px; /* Light size adjust */
+            height: 14px;
+            background-color: #fff700;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 8px #fff700, 0 0 4px #fff;
         }
 
         .wheel-container {
             position: relative;
-            width: 320px;
-            height: 320px;
-            margin: 30px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 270px; /* Wheel size adjust */
+            height: 270px;
+            z-index: 5;
         }
 
         .wheel {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 8px solid #4A5568;
+            border: 4px solid #4a4a4a;
             position: relative;
             overflow: hidden;
-            transition: transform 6s cubic-bezier(0.25, 0.1, 0.25, 1);
-            background-color: #E2E8F0;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.15);
+            transition: transform 7s cubic-bezier(0.33, 1, 0.68, 1);
+            background-color: #ddd;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
         }
 
         .segment {
@@ -63,202 +126,345 @@
             width: 50%;
             height: 50%;
             transform-origin: 100% 100%;
-            display: flex; /* For centering the span */
-            justify-content: center; /* For centering the span */
-            align-items: center; /* For centering the span */
-            font-size: 12px; /* Adjusted font size for segment text */
-            font-weight: 600;
-            color: #ffffff;
-            text-align: center;
             clip-path: polygon(0 0, 100% 0, 100% 100%);
             box-sizing: border-box;
-            padding-right: 35px; /* Increased: Pushes content (span) further from segment tip (inwards) */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 8px; /* Text padding adjust */
         }
 
         .segment span {
-            display: inline-block; /* So transform works */
-            transform-origin: center; /* Important for rotation */
-            max-width: 75%; /* Adjusted for more breathing room */
-            word-wrap: break-word;
-            line-height: 1.2; /* Helps if text wraps */
-            text-align: center; /* Ensures text within span is centered */
-            /* position: relative; // Not needed if not using top/left */
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 11px; /* Text size adjust for smaller wheel */
+            color: #ffffff;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
+            text-align: center;
+            transform-origin: center center;
+            white-space: nowrap;
         }
 
-        .pointer {
-            width: 0;
-            height: 0;
-            border-left: 22px solid transparent;
-            border-right: 22px solid transparent;
-            border-top: 35px solid #E53E3E;
+        .center-spin-button-area {
             position: absolute;
-            top: -15px;
+            width: 90px; /* Button size adjust */
+            height: 90px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             z-index: 10;
-            filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.3));
         }
-        .pointer::before {
-            content: '';
-            position: absolute;
-            top: -34px;
-            left: -18px;
-            width: 0;
-            height: 0;
-            border-left: 18px solid transparent;
-            border-right: 18px solid transparent;
-            border-top: 28px solid #c53030;
-            z-index: -1;
-        }
-
+        
         #spinButton {
-            padding: 15px 35px;
-            font-size: 1.1em;
-            font-weight: 600;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff6a00 0%, #ee0979 100%);
+            border: 4px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 0 8px rgba(255,255,255,0.4);
             color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px; /* Button text adjust */
+            font-weight: 700;
+            text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        #spinButton:hover:not(:disabled) { transform: scale(1.05); }
+        #spinButton:active:not(:disabled) { transform: scale(0.98); }
+        #spinButton:disabled { background: #777; cursor: not-allowed; opacity: 0.6; }
+
+        .wheel-stand-container {
+            position: relative;
+            margin-top: -40px; /* Stand position adjust */
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .wheel-stand {
+            width: 160px; /* Stand width adjust */
+            height: 0;
+            border-bottom: 60px solid #d12a21; /* Stand height adjust */
+            border-left: 35px solid transparent;
+            border-right: 35px solid transparent;
+            position: relative;
+            filter: drop-shadow(0px 2px 2px rgba(50,0,0,0.4));
+        }
+        .wheel-stand::before, .wheel-stand::after {
+            content: "";
+            position: absolute;
+            background-color: #d12a21;
+            width: 40px; /* Shoulder width */
+            height: 16px; /* Shoulder height */
+            top: -16px;
+            box-shadow: 0 -1px 2px rgba(0,0,0,0.15) inset;
+        }
+        .wheel-stand::before { left: 0; transform: translateX(-100%); border-radius: 8px 0 0 4px; }
+        .wheel-stand::after { right: 0; transform: translateX(100%); border-radius: 0 8px 4px 0; }
+        .wheel-stand-base {
+            width: 240px; /* Base width adjust */
+            height: 18px; /* Base height adjust */
+            background-color: #b9251d;
+            border-radius: 3px;
+            margin-top: -1px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.3);
         }
 
-        #spinButton:hover:not(:disabled) {
-            background: linear-gradient(135deg, #5a6fcf 0%, #673f8b 100%);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
-        }
-        #spinButton:active:not(:disabled) {
-            transform: translateY(0px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        #spinButton:disabled {
-            background: #CBD5E0;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        #result {
-            margin-top: 30px;
+        #resultDisplay { /* Renamed for clarity */
+            margin-top: 20px;
             font-size: 1.3em;
-            font-weight: 600;
-            color: #2D3748;
-            min-height: 30px;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            min-height: 28px;
+            padding: 8px 18px;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 25px; /* Pill shape */
+            font-family: 'Montserrat', sans-serif;
         }
+        
+        #claimButton {
+            margin-top: 15px;
+            padding: 10px 25px;
+            font-size: 1em;
+            font-weight: 700;
+            color: #1a233a;
+            background-color: #fff700; /* Yellow claim button */
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #claimButton:hover:not(:disabled) {
+            background-color: #f0e700;
+            transform: translateY(-1px);
+        }
+        #claimButton:disabled {
+            background-color: #aaa;
+            color: #666;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Spin & Win!</h1>
-        <div class="wheel-container">
-            <div class="pointer"></div>
-            <div class="wheel" id="wheel">
-                <!-- Segments will be generated by JavaScript -->
+    <div class="app-header">
+        <div class="header-info">
+            <span class="icon icon-spin"></span>
+            <span id="totalSpinText">Total Spin=</span><span id="totalSpinValue">10</span>
+        </div>
+        <div class="header-info">
+            <span class="icon icon-coin"></span>
+            <span id="totalCoinText">Total Coins=</span><span id="totalCoinValue">0</span>
+        </div>
+    </div>
+
+    <div class="game-wrapper">
+        <div class="wheel-assembly">
+            <div class="outer-ring" id="outerRing"></div>
+            <div class="wheel-container">
+                <div class="wheel" id="wheel"></div>
+            </div>
+            <div class="center-spin-button-area">
+                <button id="spinButton">Spin</button>
             </div>
         </div>
-        <button id="spinButton">SPIN!</button>
-        <p id="result">Test Your Luck!</p>
+        <div class="wheel-stand-container">
+            <div class="wheel-stand"></div>
+            <div class="wheel-stand-base"></div>
+        </div>
+        <p id="resultDisplay">Press Spin!</p>
+        <button id="claimButton" disabled>Claim Coins</button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const wheel = document.getElementById('wheel');
             const spinButton = document.getElementById('spinButton');
-            const resultDisplay = document.getElementById('result');
+            const resultDisplay = document.getElementById('resultDisplay');
+            const outerRing = document.getElementById('outerRing');
 
-            const prizes = [
-                { text: "$10 Bonus", color: "#6C5CE7", textColor: "#FFFFFF" },
-                { text: "50 Points", color: "#48BB78", textColor: "#FFFFFF" },
-                { text: "Try Again", color: "#A0AEC0", textColor: "#1A202C" },
-                { text: "$5 Credit", color: "#F6AD55", textColor: "#1A202C" },
-                { text: "2x Multiplier", color: "#ED64A6", textColor: "#FFFFFF" }, // Longer text
-                { text: "Spin Again", color: "#718096", textColor: "#FFFFFF" },   // Moderate length
-                { text: "$100 EPIC WIN!", color: "#ECC94B", textColor: "#1A202C" },// Longer text
-                { text: "25 Points", color: "#4FD1C5", textColor: "#1A202C" }
-            ];
+            const totalSpinValueDisplay = document.getElementById('totalSpinValue');
+            const totalCoinValueDisplay = document.getElementById('totalCoinValue');
+            const claimButton = document.getElementById('claimButton');
 
-            const numSegments = prizes.length;
-            const segmentAngle = 360 / numSegments;
-            let currentRotation = 0;
+            let totalSpins = 10;
+            let totalCoins = 0;
             let isSpinning = false;
 
-            prizes.forEach((prize, index) => {
+            // Prize data (same as before)
+            let visualPrizes = [
+                { value: "5", group: 4, color: "#EF476F", textColor: "#FFFFFF" }, { value: "10", group: 4, color: "#FFD166", textColor: "#333333" },
+                { value: "15", group: 4, color: "#06D6A0", textColor: "#FFFFFF" }, { value: "20", group: 4, color: "#118AB2", textColor: "#FFFFFF" },
+                { value: "25", group: 4, color: "#073B4C", textColor: "#FFFFFF" }, { value: "30", group: 4, color: "#EF476F", textColor: "#FFFFFF" },
+                { value: "35", group: 4, color: "#FFD166", textColor: "#333333" }, { value: "40", group: 4, color: "#06D6A0", textColor: "#FFFFFF" },
+                { value: "45", group: 4, color: "#118AB2", textColor: "#FFFFFF" }, { value: "49", group: 4, color: "#073B4C", textColor: "#FFFFFF" },
+                { value: "50", group: 3, color: "#EF476F", textColor: "#FFFFFF" }, { value: "60", group: 3, color: "#FFD166", textColor: "#333333" },
+                { value: "70", group: 3, color: "#06D6A0", textColor: "#FFFFFF" }, { value: "80", group: 3, color: "#118AB2", textColor: "#FFFFFF" },
+                { value: "90", group: 3, color: "#073B4C", textColor: "#FFFFFF" }, { value: "100", group: 2, color: "#EF476F", textColor: "#FFFFFF" },
+                { value: "200", group: 1, color: "#FFD166", textColor: "#333333" }, { value: "300", group: 1, color: "#06D6A0", textColor: "#FFFFFF" },
+                { value: "500", group: 0, color: "#118AB2", textColor: "#FFFFFF" }, { value: "1000", group: 0, color: "#073B4C", textColor: "#FFFFFF" }
+            ];
+
+            // Shuffle visual prizes
+            for (let i = visualPrizes.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [visualPrizes[i], visualPrizes[j]] = [visualPrizes[j], visualPrizes[i]];
+            }
+
+            const numSegments = visualPrizes.length;
+            const segmentAngle = 360 / numSegments;
+            let currentRotation = 0;
+
+            function updateDisplays() {
+                totalSpinValueDisplay.textContent = totalSpins;
+                totalCoinValueDisplay.textContent = totalCoins;
+                claimButton.disabled = totalCoins <= 0;
+            }
+
+            // Create Lights
+            const numLights = 18; // Adjusted for smaller wheel
+            const ringRadius = outerRing.offsetWidth / 2 * 0.94; // Adjusted for light placement
+            for (let i = 0; i < numLights; i++) {
+                const light = document.createElement('div');
+                light.classList.add('light');
+                const angle = (360 / numLights) * i * (Math.PI / 180);
+                const x = ringRadius * Math.cos(angle);
+                const y = ringRadius * Math.sin(angle);
+                light.style.transform = `translate(${x}px, ${y}px)`;
+                outerRing.appendChild(light);
+            }
+            
+            // Create wheel segments
+            visualPrizes.forEach((prizeData, index) => {
                 const segment = document.createElement('div');
                 segment.classList.add('segment');
-                segment.style.backgroundColor = prize.color;
+                segment.style.backgroundColor = prizeData.color;
                 
                 const segmentRotation = segmentAngle * index;
                 const skewAngle = 90 - segmentAngle;
                 segment.style.transform = `rotate(${segmentRotation}deg) skewY(${skewAngle}deg)`;
 
                 const textSpan = document.createElement('span');
-                textSpan.textContent = prize.text;
-                if (prize.textColor) {
-                    textSpan.style.color = prize.textColor;
-                }
-
-                const textRotation = (segmentAngle / 2) - 90;
-                const skewCorrection = `skewY(-${skewAngle}deg)`;
-                
-                // Fine-tune radial position with translateY.
-                // Negative values move text "up" (inwards along its rotated axis).
-                // Positive values move text "down" (outwards along its rotated axis).
-                let radialTranslateY = 0; // Default: centered by flexbox in segment's padded area.
-
-                if (numSegments >= 8 && prize.text.length > 10) { // If many segments AND long text
-                    radialTranslateY = -4; // Pull it inwards more
-                } else if (prize.text.length > 12) { // For generally long text
-                    radialTranslateY = -2; // Pull it slightly inwards
-                } else if (prize.text.length < 6 && numSegments < 8) { // Short text, wider segments
-                    radialTranslateY = 2; // Push it slightly outwards if too far in
-                }
-                
-                textSpan.style.transform = `${skewCorrection} rotate(${textRotation}deg) translateY(${radialTranslateY}px)`;
+                textSpan.textContent = prizeData.value;
+                textSpan.style.color = prizeData.textColor;
+                // Angled text (adjust -75deg for desired tilt)
+                textSpan.style.transform = `skewY(-${skewAngle}deg) rotate(${(segmentAngle/2) - 75}deg) translateY(5px)`; // Pushed text slightly down
                 
                 segment.appendChild(textSpan);
                 wheel.appendChild(segment);
             });
 
+            // Probability distribution (approx 100%)
+            const probGroup4 = 0.495050; // 49-1
+            const probGroup3 = 0.445545; // 90-50
+            const probGroup2 = 0.049505; // 100
+            const probGroup1 = 0.009901; // 200, 300
+
             spinButton.addEventListener('click', () => {
-                if (isSpinning) return;
+                if (isSpinning || totalSpins <= 0) {
+                    if (totalSpins <= 0 && !isSpinning) { // Only show if not already spinning
+                        resultDisplay.textContent = "No more spins left!";
+                        resultDisplay.style.color = "#ffdddd";
+                    }
+                    return;
+                }
 
                 isSpinning = true;
+                totalSpins--;
+                updateDisplays(); // Update spin count display
                 spinButton.disabled = true;
                 resultDisplay.textContent = "Spinning...";
-                resultDisplay.style.color = "#2D3748";
+                resultDisplay.style.color = "#FFF";
 
-                const randomIndex = Math.floor(Math.random() * numSegments);
-                const winningPrize = prizes[randomIndex];
+                const randProb = Math.random();
+                let winningGroup;
+                if (randProb < probGroup4) winningGroup = 4;
+                else if (randProb < probGroup4 + probGroup3) winningGroup = 3;
+                else if (randProb < probGroup4 + probGroup3 + probGroup2) winningGroup = 2;
+                else winningGroup = 1;
+
+                const eligibleSegmentsIndices = [];
+                visualPrizes.forEach((prize, index) => {
+                    if (prize.group === winningGroup) eligibleSegmentsIndices.push(index);
+                });
                 
-                const minRevolutions = 5 + Math.floor(Math.random() * 3);
-                const targetMiddleAngle = (randomIndex + 0.5) * segmentAngle;
-                const normalizedCurrentRotation = currentRotation % 360;
-                let finalRotationAmount = (minRevolutions * 360) - targetMiddleAngle - normalizedCurrentRotation;
+                if (eligibleSegmentsIndices.length === 0) { // Fallback
+                    const fallbackIndex = Math.floor(Math.random() * numSegments);
+                    eligibleSegmentsIndices.push(fallbackIndex);
+                }
 
-                if (finalRotationAmount < 360) {
-                    finalRotationAmount += (2 * 360);
+                const randomEligibleIndex = Math.floor(Math.random() * eligibleSegmentsIndices.length);
+                const winningSegmentIndex = eligibleSegmentsIndices[randomEligibleIndex];
+                const winningPrizeData = visualPrizes[winningSegmentIndex];
+                
+                const minRevolutions = 6 + Math.floor(Math.random() * 4);
+                const targetRotationOnWheel = -((winningSegmentIndex * segmentAngle) + (segmentAngle / 2));
+                
+                let currentEffectiveRotation = currentRotation % 360;
+                if (currentEffectiveRotation < 0) currentEffectiveRotation += 360;
+                let targetEffectiveRotation = targetRotationOnWheel % 360;
+                if (targetEffectiveRotation < 0) targetEffectiveRotation += 360;
+                
+                let spinAmount = (minRevolutions * 360) + (targetEffectiveRotation - currentEffectiveRotation);
+                if (spinAmount <= 360 * 2) {
+                    spinAmount += (Math.ceil((360 * 2 - spinAmount) / 360) + Math.floor(Math.random()*2)) * 360;
                 }
                 
-                currentRotation += finalRotationAmount;
+                currentRotation += spinAmount;
                 wheel.style.transform = `rotate(${currentRotation}deg)`;
 
                 setTimeout(() => {
-                    resultDisplay.textContent = `You won: ${winningPrize.text}!`;
-                    if (winningPrize.text.toLowerCase().includes("win") || winningPrize.text.toLowerCase().includes("$")) {
-                        resultDisplay.style.color = "#2F855A";
-                    } else if (winningPrize.text.toLowerCase().includes("try again")) {
-                        resultDisplay.style.color = "#C53030";
-                    } else {
-                        resultDisplay.style.color = "#2D3748";
+                    const wonValue = parseInt(winningPrizeData.value);
+                    if (!isNaN(wonValue)) {
+                        totalCoins += wonValue;
                     }
+                    updateDisplays(); // Update coin display
+
+                    resultDisplay.textContent = `You won: ${winningPrizeData.value}!`;
+                    if (wonValue >= 100) resultDisplay.style.color = "#FFD166";
+                    else resultDisplay.style.color = "#FFF";
                     
                     isSpinning = false;
-                    spinButton.disabled = false;
-                }, 6000);
+                    if (totalSpins > 0) {
+                        spinButton.disabled = false;
+                    } else {
+                        resultDisplay.textContent = `Game Over! Final Coins: ${totalCoins}`;
+                        resultDisplay.style.color = "#FFD166";
+                        spinButton.disabled = true; // Keep disabled
+                    }
+                }, 7000);
             });
+
+            claimButton.addEventListener('click', () => {
+                if (totalCoins > 0) {
+                    // In a real app, this would trigger a server call or more complex logic
+                    alert(`You have claimed ${totalCoins} coins!`);
+                    totalCoins = 0;
+                    updateDisplays();
+                    resultDisplay.textContent = "Coins Claimed!";
+                    resultDisplay.style.color = "#aaffaa";
+                } else {
+                    alert("No coins to claim.");
+                }
+            });
+
+            // Initial display update
+            updateDisplays();
+            if (totalSpins <= 0) { // If starting with 0 spins for some reason
+                spinButton.disabled = true;
+                resultDisplay.textContent = "No spins available.";
+            }
+
         });
     </script>
 </body>
