@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator Challenge Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+
+        .balance-info {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #5f6368;
+        }
+
+        .game-area {
+            position: relative;
+            height: 250px;
+            background-color: #e8f0fe;
+            border: 2px solid #1a73e8;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Plane starts from bottom */
+            align-items: center;
+        }
+
+        .plane-container {
+            width: 100%;
+            height: 100%;
+            position: relative; /* Relative to plane */
+        }
+
+        #plane {
+            font-size: 3em; /* Plane size */
+            position: absolute;
+            bottom: 10px; /* Initially at the bottom */
+            left: 50%;
+            transform: translateX(-50%) rotate(-45deg); /* Centered and slightly tilted */
+            transition: all 0.1s ease-out; /* Smooth movement */
+        }
+
+        #multiplier-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #000;
+            opacity: 0.7;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .bet-control {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controls input[type="number"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 80px;
+            text-align: center;
+        }
+
+        .controls button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .controls button:hover:not(:disabled) {
+            background-color: #1558b3;
+        }
+
+        .controls button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #cashOutButton {
+            background-color: #34a853; /* Green color */
+        }
+
+        #cashOutButton:hover:not(:disabled) {
+            background-color: #2b8a42;
+        }
+
+        .game-status p {
+            font-size: 1.1em;
+            font-weight: bold;
+            min-height: 20px; /* Keep space even if no message */
+        }
+
+        .history {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .history h3 {
+            color: #1a73e8;
+            margin-bottom: 8px;
+        }
+
+        .history ul {
+            list-style-type: none;
+            padding: 0;
+            max-height: 100px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .history li {
+            padding: 5px 0;
+            border-bottom: 1px dashed #eee;
+            font-size: 0.9em;
+        }
+
+        .history li:last-child {
+            border-bottom: none;
+        }
+
+        .status-error { color: #d93025; font-weight: bold; }
+        .status-success { color: #1e8e3e; font-weight: bold; }
+        .status-info { color: #1a73e8; }
+        .status-flying { color: #f9ab00; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Aviator Challenge</h1>
+            <div class="balance-info">
+                Current Balance: $<span id="balance">1000.00</span>
+            </div>
+        </header>
+
+        <div class="game-area">
+            <div class="plane-container">
+                <div id="plane">✈️</div>
+            </div>
+            <div id="multiplier-display">1.00x</div>
+        </div>
+
+        <div class="controls">
+            <div class="bet-control">
+                <label for="betAmount">Bet Amount:</label>
+                <input type="number" id="betAmount" value="10" min="1">
+                <button id="placeBetButton">Place Bet</button>
+            </div>
+            <button id="cashOutButton" disabled>Cash Out</button>
+        </div>
+
+        <div class="game-status">
+            <p id="statusMessage">Ready to place a bet.</p>
+        </div>
+
+        <div class="history">
+            <h3>Previous Results:</h3>
+            <ul id="historyList">
+                <!-- History will be added here -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const balanceDisplay = document.getElementById('balance');
+            const betAmountInput = document.getElementById('betAmount');
+            const placeBetButton = document.getElementById('placeBetButton');
+            const cashOutButton = document.getElementById('cashOutButton');
+            const planeElement = document.getElementById('plane');
+            const multiplierDisplay = document.getElementById('multiplier-display');
+            const statusMessage = document.getElementById('statusMessage');
+            const historyList = document.getElementById('historyList');
+
+            // Game State
+            let balance = 1000.00;
+            let currentBet = 0;
+            let multiplier = 1.00;
+            let animationFrameId;
+            let targetCrashMultiplier;
+            let isFlying = false;
+            let hasCashedOut = false;
+            let gameStartTime;
+
+            const MAX_HISTORY_ITEMS = 10;
+
+            // Initialize
+            updateBalanceDisplay();
+            cashOutButton.disabled = true;
+
+            // Event Listeners
+            placeBetButton.addEventListener('click', placeBet);
+            cashOutButton.addEventListener('click', cashOut);
+
+            function updateBalanceDisplay() {
+                balanceDisplay.textContent = balance.toFixed(2);
+            }
+
+            function placeBet() {
+                const betValue = parseFloat(betAmountInput.value);
+
+                if (isNaN(betValue) || betValue <= 0) {
+                    setStatusMessage("Please enter a valid bet amount.", "error");
+                    return;
+                }
+                if (betValue > balance) {
+                    setStatusMessage("Insufficient balance!", "error");
+                    return;
+                }
+
+                currentBet = betValue;
+                balance -= currentBet;
+                updateBalanceDisplay();
+                setStatusMessage(`You bet $${currentBet.toFixed(2)}. Waiting for game to start...`, "info");
+
+                placeBetButton.disabled = true;
+                cashOutButton.disabled = true;
+                betAmountInput.disabled = true;
+
+                setTimeout(startGame, 2000); // Start after 2 seconds
+            }
+
+            function startGame() {
+                hasCashedOut = false; // Reset for the new game
+
+                const mainChance = Math.random();
+
+                if (mainChance < 0.50) { // 50% chance for an instant 0.60x crash
+                    targetCrashMultiplier = 0.60;
+                    isFlying = false; // No flight will occur
+
+                    multiplierDisplay.textContent = `${targetCrashMultiplier.toFixed(2)}x`;
+                    multiplierDisplay.style.color = "red";
+                    planeElement.style.bottom = '10px'; // Keep plane at start
+                    planeElement.style.transform = 'translateX(-50%) rotate(-45deg)';
+                    
+                    setStatusMessage(`Instant Crash @ ${targetCrashMultiplier.toFixed(2)}x! You lost your bet.`, "error");
+                    
+                    addToHistory(targetCrashMultiplier, false);
+                    resetGameControls(); // Allow new bet
+
+                } else { // 50% chance for a normal game
+                    isFlying = true;
+                    multiplier = 1.00; // Multiplier starts at 1.00x for flying games
+                    gameStartTime = Date.now();
+                    
+                    const p_sub = Math.random();
+                    if (p_sub < 0.5) { // 50% of this path (25% of total)
+                        targetCrashMultiplier = 1 + Math.random(); // 1.00x - 2.00x
+                    } else if (p_sub < 0.8) { // 30% of this path (15% of total)
+                        targetCrashMultiplier = 2 + Math.random() * 3; // 2.00x - 5.00x
+                    } else if (p_sub < 0.95) { // 15% of this path (7.5% of total)
+                        targetCrashMultiplier = 5 + Math.random() * 5; // 5.00x - 10.00x
+                    } else { // 5% of this path (2.5% of total)
+                        targetCrashMultiplier = 10 + Math.random() * 15; // 10.00x - 25.00x
+                    }
+                    targetCrashMultiplier = Math.max(1.01, parseFloat(targetCrashMultiplier.toFixed(2)));
+
+                    setStatusMessage("Plane is flying!", "flying");
+                    multiplierDisplay.textContent = `${multiplier.toFixed(2)}x`;
+                    multiplierDisplay.style.color = "#000";
+                    planeElement.style.bottom = '10px';
+                    planeElement.style.transform = 'translateX(-50%) rotate(-45deg)';
+
+                    cashOutButton.disabled = false;
+                    animationFrameId = requestAnimationFrame(updateGame);
+                }
+            }
+
+            function updateGame() {
+                if (!isFlying) return;
+
+                const elapsedTime = (Date.now() - gameStartTime) / 1000; // in seconds
+                multiplier = 1 + 0.1 * elapsedTime + 0.02 * Math.pow(elapsedTime, 2);
+                multiplier = Math.min(multiplier, 1000);
+
+                multiplierDisplay.textContent = `${multiplier.toFixed(2)}x`;
+
+                const planeMaxHeightPercentage = 80;
+                const currentPlaneHeight = Math.min(10 + (multiplier - 1) * 5, planeMaxHeightPercentage);
+                planeElement.style.bottom = `${currentPlaneHeight}%`;
+
+                if (multiplier >= targetCrashMultiplier) {
+                    crash();
+                } else {
+                    animationFrameId = requestAnimationFrame(updateGame);
+                }
+            }
+
+            function crash() { // This function is called when a flying game crashes
+                isFlying = false;
+                cancelAnimationFrame(animationFrameId);
+
+                multiplierDisplay.textContent = `${targetCrashMultiplier.toFixed(2)}x`;
+                multiplierDisplay.style.color = "red";
+                
+                if (!hasCashedOut) { // Only show generic crash if not an instant 0.6x crash
+                    setStatusMessage(`Crashed @ ${targetCrashMultiplier.toFixed(2)}x!`, "error");
+                }
+                
+                addToHistory(targetCrashMultiplier, false); // 'false' because they didn't cash out before crash
+                resetGameControls();
+            }
+
+            function cashOut() {
+                if (!isFlying || hasCashedOut) return;
+
+                hasCashedOut = true;
+                isFlying = false; 
+                cancelAnimationFrame(animationFrameId);
+
+                const winnings = currentBet * multiplier;
+                balance += winnings;
+                updateBalanceDisplay();
+
+                setStatusMessage(`Cashed out at ${multiplier.toFixed(2)}x! You won $${winnings.toFixed(2)}.`, "success");
+                multiplierDisplay.style.color = "green";
+                
+                addToHistory(multiplier, true); // 'true' because they cashed out
+                resetGameControls();
+            }
+            
+            function resetGameControls() {
+                placeBetButton.disabled = false;
+                cashOutButton.disabled = true;
+                betAmountInput.disabled = false;
+                currentBet = 0; // Reset current bet for next round
+            }
+
+            function setStatusMessage(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'game-status-message'; 
+                if (type === "error") {
+                    statusMessage.classList.add('status-error');
+                } else if (type === "success") {
+                    statusMessage.classList.add('status-success');
+                } else if (type === "info") {
+                    statusMessage.classList.add('status-info');
+                } else if (type === "flying") {
+                    statusMessage.classList.add('status-flying');
+                }
+            }
+            
+            function addToHistory(value, cashedOut) {
+                const listItem = document.createElement('li');
+                // Ensure value is treated as a number for toFixed
+                listItem.textContent = `${parseFloat(value).toFixed(2)}x ${cashedOut ? '(Cashed Out)' : ''}`;
+                listItem.style.color = cashedOut ? 'green' : (parseFloat(value) < 1.00 ? 'purple' : 'red'); // Different color for <1.00x
+                
+                historyList.prepend(listItem); 
+
+                if (historyList.children.length > MAX_HISTORY_ITEMS) {
+                    historyList.removeChild(historyList.lastChild);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
